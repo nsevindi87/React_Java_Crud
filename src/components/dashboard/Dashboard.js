@@ -1,6 +1,6 @@
 import { Table,TableContainer, Paper, TableBody, TableCell, TableHead, TableRow, Typography, IconButton } from '@mui/material';
 import Button from '@mui/material/Button';
-import { color, Container } from '@mui/system'
+import { Container } from '@mui/system'
 import React, { useEffect,useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from "@mui/icons-material/Delete"
@@ -38,7 +38,6 @@ const Dashboard = () => {
       const response = await fetch("http://localhost:8080/api/users")
       const result = await response.json();
       setUsers(result)
-      console.log(users)
     } catch (error) {
       console.error(error);
     }
@@ -46,7 +45,6 @@ const Dashboard = () => {
 
   useEffect(()=>{
     fetchUsers()
-    console.log(users)
   },[])
 
   return (

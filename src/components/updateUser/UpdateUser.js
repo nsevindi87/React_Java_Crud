@@ -16,11 +16,11 @@ const UpdateUser = () => {
     phoneNumber:"" 
 })
 
-//const navigate = navigate()
+const navigate = useNavigate()
 const handleInputChange =(event)=>{
   const {name,value} = event.target;
-  setFormData({
-      ...formData,
+  setUser({
+      ...user,
       [name]:value
   })
 }
