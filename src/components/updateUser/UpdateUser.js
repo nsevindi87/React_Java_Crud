@@ -1,12 +1,14 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Typography, TextField } from '@mui/material'
+import "./UpdateUser.css"
 
 const UpdateUser = () => {
 
-  const id = useParams()
+  const {id} = useParams()
+
   const [user, setUser] =useState({
     username:"",
     email:"",
@@ -14,17 +16,44 @@ const UpdateUser = () => {
     phoneNumber:"" 
 })
 
-const navigate = navigate()
+//const navigate = navigate()
+const handleInputChange =(event)=>{
+  const {name,value} = event.target;
+  setFormData({
+      ...formData,
+      [name]:value
+  })
+}
 
-const fetchUserById = async (userId)=>{
+const handleSubmit = async (e)=>{
+  e.preventDefault();
   try {
-    const response = await fetch(`http://localhost:8080/api/user/${userId}`)
-    const result = await response.json();
-    setUser(result)
+      const response = await fetch(`http://localhost:8080/api/user/${id}`,{
+          method: "PATCH",
+          headers:{
+              "Content-Type":"application/json"
+          }, 
+          body:JSON.stringify(user)
+      });
+      const result = await response.json();
+      navigate("/");
   } catch (error) {
-    console.error(error);
+      console.error(error)
   }
 }
+
+useEffect(()=>{
+  const fetchUser = async ()=>{
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/${id}`)
+      const result = await response.json();
+      setUser(result)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  fetchUser()
+},[id])
 
   return (
     <>
@@ -32,7 +61,7 @@ const fetchUserById = async (userId)=>{
                 <Typography variant='h4' gutterBottom>
                     Update User
                 </Typography>
-                <form /* onSubmit={handleSubmit} */>
+                <form  onSubmit={handleSubmit} >
                     <TextField
                         label="Username"
                         type="text"
@@ -41,7 +70,7 @@ const fetchUserById = async (userId)=>{
                         fullWidth
                         margin="normal" 
                         value={user.username}
-                    //    onChange={handleInputChange}
+                        onChange={handleInputChange}
                         />
 
                     <TextField
@@ -52,7 +81,7 @@ const fetchUserById = async (userId)=>{
                         fullWidth
                         margin="normal" 
                         value={user.email}
-                      //  onChange={handleInputChange}
+                        onChange={handleInputChange}
                         />
 
                     <TextField
@@ -63,7 +92,7 @@ const fetchUserById = async (userId)=>{
                         fullWidth
                         margin="normal" 
                         value={user.phoneNumber}
-                   //     onChange={handleInputChange}
+                        onChange={handleInputChange}
                         />
 
                     <TextField
@@ -74,7 +103,7 @@ const fetchUserById = async (userId)=>{
                         fullWidth
                         margin="normal"
                         value={user.address}
-                     //   onChange={handleInputChange}
+                        onChange={handleInputChange}
                         />
                     
                     <Button className='btn' variant="contained" color='primary' type='submit' fullWidth>Post user</Button>
