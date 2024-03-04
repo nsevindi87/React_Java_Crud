@@ -4,6 +4,7 @@ import { color, Container } from '@mui/system'
 import React, { useEffect,useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
 
 const Dashboard = () => {
 
@@ -15,11 +16,21 @@ const Dashboard = () => {
     navigate("/user")
   }
 
-  const handleDelete=(userId)=>{
-    try {console.log(userId)
+  const handleDelete=async (userId)=>{
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/${userId}`,{
+        method:"DELETE"
+      })
+      if(response.ok){
+        fetchUsers()
+      }
     } catch (error) {
-      console.error(error)
+      console.error(error.message)
     }
+  }
+
+  const handleUpdate= (userId)=>{
+    navigate(`/user/${userId}`)
   }
 
   const fetchUsers = async ()=>{
@@ -73,8 +84,15 @@ const Dashboard = () => {
                   <TableCell>
                     <IconButton 
                       color="secondary"
+                      onClick={()=>handleUpdate(user.id)}
+                      >
+                        
+                        <EditIcon></EditIcon>                    </IconButton>
+                    <IconButton 
+                      color="secondary"
                       onClick={()=>handleDelete(user.id)}
                       >
+                        
                       <DeleteIcon></DeleteIcon>
                     </IconButton>
                   </TableCell>
